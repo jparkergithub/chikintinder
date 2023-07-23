@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { Button, Container, Row } from "reactstrap";
+import { Alert, Button, Container, Row } from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { downdootChicken, getAllChickens, updootChicken } from "../utils/api";
@@ -10,26 +10,45 @@ function RateChickens() {
   const [loading, setLoading] = useState(false);
   const [chickens, setChickens] = useState([]);
   const [index, setIndex] = useState(0);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  const chicken = chickens[index] ?? {};
+  const chicken = chickens[index];
 
   function getNewChicken() {
+    setErrorMsg(null);
     setLoading(true);
-    getAllChickens().then((data) => {
-      console.log(data);
-      setChickens(_.shuffle(data));
-      setLoading(false);
-    });
+    getAllChickens()
+      .then((data) => setChickens(_.shuffle(data)))
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
   }
 
   useEffect(getNewChicken, []);
 
+  function handleUpdoot() {
+    setErrorMsg(null);
+    setLoading(true);
+    updootChicken(chicken.id)
+      .then(() => setIndex(index + 1))
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
+  }
+
+  function handleDowndoot() {
+    setErrorMsg(null);
+    setLoading(true);
+    downdootChicken(chicken.id)
+      .then(() => setIndex(index + 1))
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
+  }
+
   return (
     <div>
       <Header />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
+      {loading ? <LoadingSpinner /> : null}
+      {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
+      {!loading && !errorMsg && chicken ? (
         <Container>
           {index <= chickens.length - 1 ? (
             <Row>
@@ -56,10 +75,7 @@ function RateChickens() {
                   color="primary"
                   size="lg"
                   className="shadow-sm"
-                  onClick={() => {
-                    downdootChicken(chicken.id);
-                    setIndex(index + 1);
-                  }}
+                  onClick={handleDowndoot}
                 >
                   🚫 Cool Ranch 🥶
                 </Button>
@@ -68,10 +84,7 @@ function RateChickens() {
                   color="danger"
                   size="lg"
                   className="shadow-sm"
-                  onClick={() => {
-                    updootChicken(chicken.id);
-                    setIndex(index + 1);
-                  }}
+                  onClick={handleUpdoot}
                 >
                   ❤️ Spicy Buffalo 🥵
                 </Button>
@@ -81,7 +94,7 @@ function RateChickens() {
             "No more chickens to rate."
           )}
         </Container>
-      )}
+      ) : null}
     </div>
   );
 }

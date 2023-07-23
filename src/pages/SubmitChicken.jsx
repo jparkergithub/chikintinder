@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import {
+  Alert,
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+} from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { submitChicken } from "../utils/api";
@@ -15,15 +22,17 @@ const emptyForm = {
 function SubmitChicken() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const navigate = useNavigate();
 
   function submitForm() {
+    setErrorMsg(null);
     setLoading(true);
-    submitChicken(form).then(() => {
-      setLoading(false);
-      navigate("/view");
-    });
+    submitChicken(form)
+      .then(() => navigate("/view"))
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -34,6 +43,7 @@ function SubmitChicken() {
         <LoadingSpinner />
       ) : (
         <>
+          {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
           <Form className="p-3">
             <FormGroup>
               <Label>Name: </Label>

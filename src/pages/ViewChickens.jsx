@@ -1,6 +1,14 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { Col, Form, Input, Label, Row, Table } from "reactstrap";
+import {
+  Alert,
+  Col,
+  Form,
+  Input,
+  Label,
+  Row,
+  Table,
+} from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { getAllChickens } from "../utils/api";
@@ -8,13 +16,15 @@ import { getAllChickens } from "../utils/api";
 function ViewChickens() {
   const [loading, setLoading] = useState(false);
   const [chickens, setChickens] = useState();
+  const [errorMsg, setErrorMsg] = useState(null);
 
   function refreshChickens() {
+    setErrorMsg(null);
     setLoading(true);
-    getAllChickens().then((data) => {
-      setChickens(data);
-      setLoading(false);
-    });
+    getAllChickens()
+      .then((data) => setChickens(data))
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
   }
 
   useEffect(refreshChickens, []);
@@ -27,6 +37,7 @@ function ViewChickens() {
         <LoadingSpinner />
       ) : (
         <>
+          {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
           <Form className="p-3">
             <Row>
               <Col md={3}>

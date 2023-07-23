@@ -1,42 +1,55 @@
 const API_URL = "http://localhost:5000";
 
-export async function getAllChickens() {
-  const res = await fetch(API_URL + "/all");
-  return res.json();
+async function request(endpoint, { body, ...customConfig } = {}) {
+  const headers = { 'Content-Type': 'application/json' };
+
+  const config = {
+    method: body ? 'POST' : 'GET',
+    ...customConfig,
+    headers: {
+      ...headers,
+      ...customConfig.headers,
+    },
+  };
+
+  if (body) {
+    config.body = JSON.stringify(body);
+  }
+
+  let data;
+  try {
+    const response = await window.fetch(API_URL + endpoint, config);
+    data = await response.json();
+    if (response.ok) {
+      return data;
+    }
+    throw new Error(data.message);
+  } catch (err) {
+    return Promise.reject(err.message ? err.message : data);
+  }
 }
 
-export async function submitChicken(chicken) {
-  const res = await fetch(API_URL + "/new", {
-    method: "POST",
-    headers: {
-      Accept: "application.json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(chicken),
-  });
-  return res.json();
+export function getAllChickens() {
+  return request(`/all`);
 }
 
-export async function updootChicken(id) {
-  const res = await fetch(API_URL + "/updoot", {
-    method: "PUT",
-    headers: {
-      Accept: "application.json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
+export function submitChicken(chicken) {
+  return request(`/new`, { 
+    body: chicken,
+    method: 'POST'
   });
-  return res.json();
 }
 
-export async function downdootChicken(id) {
-  const res = await fetch(API_URL + "/downdoot", {
-    method: "PUT",
-    headers: {
-      Accept: "application.json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
+export function updootChicken(id) {
+  return request(`/updoot`, {
+    body: { id },
+    method: 'PUT'
   });
-  return res.json();
+}
+
+export function downdootChicken(id) {
+  return request(`/downdoot`, {
+    body: { id },
+    method: 'PUT'
+  });
 }
