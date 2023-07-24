@@ -48,53 +48,51 @@ function RateChickens() {
       <Header />
       {loading ? <LoadingSpinner /> : null}
       {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
-      {!loading && !errorMsg && chicken ? (
+      {!loading && !errorMsg && index <= chickens.length - 1 ? (
         <Container>
-          {index <= chickens.length - 1 ? (
-            <Row>
-              <div className="p-2 bg-light d-flex align-items-center justify-content-center">
-                <div className="chikn-img d-flex align-items-center justify-content-center">
-                  <img src={chicken.imgurl} />
-                </div>
+          <Row>
+            <div className="p-2 bg-light d-flex align-items-center justify-content-center">
+              <div className="chikn-img d-flex align-items-center justify-content-center">
+                <img src={chicken.imgurl} />
               </div>
-              <div style={{ height: "220px" }}>
-                <h2 className="mt-3 d-flex align-items-baseline">
-                  {chicken.name}
-                  <small className="text-sm text-muted ms-3 d-flex align-items-center">
-                    <FaMapMarkerAlt style={{ width: 20 }} className="me-2" />
-                    {chicken.location}
-                  </small>
-                </h2>
-                <hr />
-                <h6>Description</h6>
-                <p>{chicken.description}</p>
-              </div>
-              <div className="d-flex justify-content-between px-2 py-4">
-                <Button
-                  outline
-                  color="primary"
-                  size="lg"
-                  className="shadow-sm"
-                  onClick={handleDowndoot}
-                >
-                  🚫 Cool Ranch 🥶
-                </Button>
-                <Button
-                  outline
-                  color="danger"
-                  size="lg"
-                  className="shadow-sm"
-                  onClick={handleUpdoot}
-                >
-                  ❤️ Spicy Buffalo 🥵
-                </Button>
-              </div>
-            </Row>
-          ) : (
-            "No more chickens to rate."
-          )}
+            </div>
+            <div style={{ height: "220px" }}>
+              <h2 className="mt-3 d-flex align-items-baseline">
+                {chicken.name}
+                <small className="text-sm text-muted ms-3 d-flex align-items-center">
+                  <FaMapMarkerAlt style={{ width: 20 }} className="me-2" />
+                  {chicken.location}
+                </small>
+              </h2>
+              <hr />
+              <h6>Description</h6>
+              <p>{chicken.description}</p>
+            </div>
+            <div className="d-flex justify-content-between px-2 py-4">
+              <Button
+                outline
+                color="primary"
+                size="lg"
+                className="shadow-sm"
+                onClick={handleDowndoot}
+              >
+                🚫 Cool Ranch 🥶
+              </Button>
+              <Button
+                outline
+                color="danger"
+                size="lg"
+                className="shadow-sm"
+                onClick={handleUpdoot}
+              >
+                ❤️ Spicy Buffalo 🥵
+              </Button>
+            </div>
+          </Row>
         </Container>
-      ) : null}
+      ) : (
+        "No more chickens to rate."
+      )}
     </div>
   );
 }
