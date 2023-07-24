@@ -53,3 +53,10 @@ export function downdootChicken(id) {
     method: 'PUT'
   });
 }
+
+export function deleteChicken(id) {
+  return request(`/delete`, {
+    body: { id },
+    method: 'DELETE'
+  });
+}

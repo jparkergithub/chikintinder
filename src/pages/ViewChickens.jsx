@@ -1,17 +1,9 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Col,
-  Form,
-  Input,
-  Label,
-  Row,
-  Table,
-} from "reactstrap";
+import { Alert, Button, Col, Form, Input, Label, Row, Table } from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { getAllChickens } from "../utils/api";
+import { getAllChickens, deleteChicken } from "../utils/api";
 
 function ViewChickens() {
   const [loading, setLoading] = useState(false);
@@ -28,6 +20,15 @@ function ViewChickens() {
   }
 
   useEffect(refreshChickens, []);
+
+  function handleDelete(id) {
+    setErrorMsg(null);
+    setLoading(true);
+    deleteChicken(id)
+      .then(() => refreshChickens())
+      .catch((e) => setErrorMsg(e))
+      .finally(() => setLoading(false));
+  }
 
   return (
     <div>
@@ -57,6 +58,7 @@ function ViewChickens() {
                 <th>👎</th>
                 <th>👍</th>
                 <th>Total Score</th>
+                <th>Fry Chicken 🍗</th>
               </tr>
             </thead>
             <tbody>
@@ -89,6 +91,15 @@ function ViewChickens() {
                     }
                   >
                     {c.score} {c.score > 0 ? "🔥" : "❄️"}
+                  </td>
+                  <td>
+                    <Button
+                      color="danger"
+                      size="sm"
+                      onClick={() => handleDelete(c.id)}
+                    >
+                      🚫 Delete
+                    </Button>
                   </td>
                 </tr>
               ))}
