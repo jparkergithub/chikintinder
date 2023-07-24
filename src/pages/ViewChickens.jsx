@@ -4,11 +4,14 @@ import { Alert, Button, Col, Form, Input, Label, Row, Table } from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { getAllChickens, deleteChicken } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 function ViewChickens() {
   const [loading, setLoading] = useState(false);
   const [chickens, setChickens] = useState();
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const navigate = useNavigate();
 
   function refreshChickens() {
     setErrorMsg(null);
@@ -33,23 +36,18 @@ function ViewChickens() {
   return (
     <div>
       <Header />
-      <h2 className="ms-2">All Chickens</h2>
+      <h2 className="ms-2 mt-5">
+        All Chickens{" "}
+        <Button size="sm" color="danger" onClick={() => navigate("/submit")}>
+          + Add New
+        </Button>
+      </h2>
       {loading ? (
         <LoadingSpinner />
       ) : (
         <>
           {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : null}
-          <Form className="p-3">
-            <Row>
-              <Col md={3}>
-                <Label>Sort By: </Label>
-              </Col>
-              <Col md={9}>
-                <Input type="select" bsSize="sm" />
-              </Col>
-            </Row>
-          </Form>
-          <Table hover>
+          <Table hover className="mt-5">
             <thead>
               <tr>
                 <th></th>

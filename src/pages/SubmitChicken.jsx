@@ -38,7 +38,7 @@ function SubmitChicken() {
   return (
     <div>
       <Header />
-      <h2 className="ms-2">Submit a Chicken</h2>
+      <h2 className="ms-2 mt-5">Submit a Chicken</h2>
       {loading ? (
         <LoadingSpinner />
       ) : (
