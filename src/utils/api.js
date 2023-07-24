@@ -1,4 +1,5 @@
 const API_URL = "http://localhost:5000";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 async function request(endpoint, { body, ...customConfig } = {}) {
   const headers = { 'Content-Type': 'application/json' };
@@ -7,6 +8,7 @@ async function request(endpoint, { body, ...customConfig } = {}) {
     method: body ? 'POST' : 'GET',
     ...customConfig,
     headers: {
+      "x-api-key": API_KEY,
       ...headers,
       ...customConfig.headers,
     },
