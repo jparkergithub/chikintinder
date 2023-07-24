@@ -1,10 +1,10 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Input, Label, Row, Table } from "reactstrap";
+import { useNavigate } from "react-router-dom";
+import { Alert, Button, Table } from "reactstrap";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { getAllChickens, deleteChicken } from "../utils/api";
-import { useNavigate } from "react-router-dom";
+import { deleteChicken, getAllChickens } from "../utils/api";
 
 function ViewChickens() {
   const [loading, setLoading] = useState(false);
